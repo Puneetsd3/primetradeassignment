@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: intern_assignment
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DB_HOST: postgres
+      DB_NAME: intern_assignment
+      DB_USER: postgres
+      DB_PASS: postgres
+      JWT_SECRET: replace_this_with_a_strong_secret
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+    command: npm run dev
+
+volumes:
+  pgdata:
